@@ -1,0 +1,41 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-indigo-200 px-4">
+  <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+    <h1 class="text-3xl font-extrabold mb-6 text-center text-gray-800">Login</h1>
+
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <!-- Email -->
+      <div class="mb-4">
+        <%= f.label :email, class: "block mb-2 text-sm font-medium text-gray-700" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", 
+              class: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-4">
+        <%= f.label :password, class: "block mb-2 text-sm font-medium text-gray-700" %>
+        <%= f.password_field :password, autocomplete: "current-password", 
+              class: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+
+      <!-- Remember Me -->
+      <div class="flex items-center justify-between mb-6">
+        <label class="flex items-center text-sm text-gray-600">
+          <%= f.check_box :remember_me, class: "mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+          Remember me
+        </label>
+        <%= link_to "Forgot password?", new_password_path(resource_name), class: "text-sm text-blue-600 hover:underline" %>
+      </div>
+
+      <!-- Submit Button -->
+      <div>
+        <%= f.submit "Log in", 
+              class: "w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition duration-200 shadow-md" %>
+      </div>
+    <% end %>
+
+    <!-- Extra Links -->
+    <div class="mt-6 text-center text-sm text-gray-600">
+      <%= render "devise/shared/links" %>
+    </div>
+  </div>
+</div>

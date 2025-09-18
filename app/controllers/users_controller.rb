@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ show edit update destroy send_email ]
-  before_action :require_login, only: [:index, :show]
-  skip_before_action :verify_authenticity_token, only: [:login_create]
+  skip_before_action :verify_authenticity_token, only: [:create]
+  before_action :authenticate_user!
   # GET /users or /users.json
   def index
     @users = policy_scope(User)
@@ -57,24 +57,7 @@ class UsersController < ApplicationController
       end
     end
   end
-  def login
-    @user = User.new
-  end
-  def login_create
-    user=User.find_by(email:params[:user][:email])
-    if user&&user.authenticate(params[:user][:password]) 
-      session[:user_id] = user.id
-      redirect_to dashboard_path, notice: "#{user.name} successfully logged in!"
-    else
-      flash[:alert] = "Invalid email or password"
-      redirect_to login_path
-    end
-  end
 
-  def logout
-    session[:user_id]=nil
-    redirect_to login_path, notice:"You have been logged out"
-  end
 
   # DELETE /users/1 or /users/1.json
   def destroy
@@ -113,16 +96,6 @@ class UsersController < ApplicationController
     # Only allow a list of trusted parameters through.
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation, :role)
-    end
-    
-    def current_user
-       @current_user ||= User.find_by(id: session[:user_id])
-    end
-
-    def require_login
-      unless current_user
-        redirect_to login_path, alert: "You must be logged in first."
-      end
     end
 
 end

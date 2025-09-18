@@ -29,15 +29,19 @@
   <body data-controller="confirm">
       <% unless controller_name == "users" && action_name == "login" %>
       <div class="flex flex-col min-h-screen">
+      <% if user_signed_in? %>
       <nav class="bg-gray-800 p-4">
       <div class="flex space-x-6">
         <%= link_to "Home", dashboard_path, class: "text-gray-300 hover:text-white" %>
         <%= link_to "Users", users_path, class: "text-gray-300 hover:text-white" %>
-        <% if session[:user_id] %>
-          <%= button_to "Logout", logout_path, method: :delete, class:"btn btn-danger text-white justify-self-end" %>
+        <% if user_signed_in? %>
+          <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: "text-gray-300 hover:text-white bg-transparent border-0 p-0" %>
+        <% else %>
+          <%= link_to 'Login', new_user_session_path %>
         <% end %>
       </div>
     </nav>
+     <% end %>
     <% end %>
     <% if flash[:notice] %>
       <div class="fixed bottom-5 left-5 z-50 pointer-events-none">
