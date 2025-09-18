@@ -1,0 +1,90 @@
+<% content_for :title, "Users" %>
+
+<div id="users", class="mt-12 flex justify-center">
+<div class="w-full max-w-4xl px-6">
+
+        <div class="my-4 text-right">
+         <% if policy(User).send_bulk_emails? %>
+            <%= button_to "Send emails to all users", send_bulk_emails_users_path, method: :post, class: "inline-block bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600" %>
+         <% end %>
+        </div>
+
+  <table class="w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+    <thead class="bg-gray-100">
+        <tr>
+            <th class="py-2 px-4 text-left text-gray-700 font-semibold border-b">Name</th>
+            <th class="py-2 px-4 text-left text-gray-700 font-semibold border-b">Email</th>
+            <th class="py-2 px-4 text-gray-700 font-semibold border-b text-center", colspan="4">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @users.each do |user|%>
+        <tr>
+            <td class="py-2 px-4 border-b"><%= user.name %></td>
+            <td class="py-2 px-4 border-b"><%= user.email %></td>
+            <td class="py-2 px-4 border-b"><%= link_to "Show", user, class: "inline-block bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600" %></td>
+            <% if policy(user).update? %>
+                <td class="py-2 px-4 border-b"><%= link_to "Edit", edit_user_path(user), class: "inline-block bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600" %></td>
+                <td class="py-2 px-4 border-b">
+                  <button 
+                        data-user-id="<%= user.id %>"
+                        data-user-name="<%= user.name %>"
+                        class="delete-btn bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                        Delete
+                    </button>
+                </td>
+            <% end %>
+            <% if policy(user).send_email? %>
+              <td><%= button_to "Send email", send_email_user_path(user), method: :post, class: "inline-block bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600" %></td>
+            <% end %>
+        </tr>
+        <% end %>
+    </tbody>
+
+</table>
+</div>
+</div>
+<div id="deleteModal" class="hidden fixed inset-0 flex items-center justify-center 
+            bg-black/30 backdrop-blur-sm z-50">
+  <div class="bg-white rounded-lg shadow-lg w-96 p-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Confirm Delete</h2>
+    <p id="deleteMessage" class="text-gray-600 mb-6"></p>
+
+    <div class="flex justify-end space-x-3">
+      <button id="cancelDelete" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+        Cancel
+      </button>
+      <form id="deleteForm" method="post">
+        <%= hidden_field_tag :_method, :delete %>
+        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+          Delete
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+   document.addEventListener("turbo:load", () => {
+  const modal = document.getElementById("deleteModal");
+  const deleteMessage = document.getElementById("deleteMessage");
+  const deleteForm = document.getElementById("deleteForm");
+  const cancelBtn = document.getElementById("cancelDelete");
+
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const userId = btn.getAttribute("data-user-id");
+      const userName = btn.getAttribute("data-user-name");
+
+      deleteMessage.textContent = `Are you sure you want to delete ${userName}?`;
+      deleteForm.action = `/users/${userId}`;
+      modal.classList.remove("hidden");
+    });
+  });
+
+  cancelBtn.addEventListener("click", () => {
+    modal.classList.add("hidden");
+  });
+});
+                         
+</script>

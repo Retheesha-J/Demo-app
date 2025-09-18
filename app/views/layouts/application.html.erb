@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Demo App" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+  </head>
+
+  <body data-controller="confirm">
+      <% unless controller_name == "users" && action_name == "login" %>
+      <div class="flex flex-col min-h-screen">
+      <nav class="bg-gray-800 p-4">
+      <div class="flex space-x-6">
+        <%= link_to "Home", dashboard_path, class: "text-gray-300 hover:text-white" %>
+        <%= link_to "Users", users_path, class: "text-gray-300 hover:text-white" %>
+        <% if session[:user_id] %>
+          <%= button_to "Logout", logout_path, method: :delete, class:"btn btn-danger text-white justify-self-end" %>
+        <% end %>
+      </div>
+    </nav>
+    <% end %>
+    <% if flash[:notice] %>
+      <div class="fixed bottom-5 left-5 z-50 pointer-events-none">
+        <div id="notice" class="bg-white text-black px-6 py-4 rounded-lg shadow-lg pointer-events-auto animate-fade-in-out">
+          <%= flash[:notice] %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if flash[:alert] %>
+      <div class="fixed bottom-5 left-5 z-50 pointer-events-none">
+        <div id="alert" class="bg-white text-black px-6 py-4 rounded-lg shadow-lg pointer-events-auto animate-fade-in-out">
+          <%= flash[:alert] %>
+        </div>
+      </div>
+    <% end %>
+                                          
+
+
+<div id="confirmModal" 
+     class="hidden fixed inset-0 flex items-center justify-center bg-gray-800/50 backdrop-blur-sm z-50"
+     data-controller="confirm">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Confirm Delete</h2>
+    <p id="confirmMessage" class="text-gray-600 mb-6">Are you sure?</p>
+    <div class="flex justify-end space-x-3">
+      <button type="button" data-action="click->confirm#close" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Cancel</button>
+      <button type="button" data-action="click->confirm#confirm" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">Delete</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+    <%= yield %>
+</div>
+    <script>
+      function hideFlashes(){
+        setTimeout(()=>{
+          const notice=document.getElementById("notice");
+          const alert=document.getElementById("alert");
+
+          if(notice) notice.style.display="none";
+          if(alert) alert.style.display="none";
+        },3000)
+      }
+      document.addEventListener("DOMContentLoaded", hideFlashes);
+      document.addEventListener("turbo:load", hideFlashes);
+    </script>
+  </body>
+</html>

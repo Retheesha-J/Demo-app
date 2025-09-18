@@ -1,0 +1,47 @@
+<%= form_with(model: user, local: true, class: "space-y-4") do |form| %>
+
+  <% if user.errors.any? %>
+    <div class="bg-red-100 text-red-700 p-4 rounded mb-4">
+      <h2 class="font-semibold mb-2">
+        <%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:
+      </h2>
+
+      <ul class="list-disc list-inside">
+        <% user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, class: "block mb-1 font-semibold text-gray-700" %>
+    <%= form.text_field :name, class: "w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+  </div>
+
+  <div>
+    <%= form.label :email, class: "block mb-1 font-semibold text-gray-700" %>
+    <%= form.email_field :email, class: "w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+  </div>
+  <div>
+    <%= form.label :role, class: "block mb-1 font-semibold text-gray-700" %>
+    <%= form.select :role, 
+        options_for_select([["User", "user"], ["Support", "support"],["Admin","admin"],["Manager","manager"]], form.object.role), 
+        { prompt: "Select a role" }, 
+        class: "w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    %>
+  </div>
+  <div>
+    <%= form.label :password, class: "block mb-1 font-semibold text-gray-700" %>
+    <%= form.password_field :password, class: "w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+  </div>
+
+
+<div class="flex justify-between mt-6">
+   <%= link_to "Back to users", users_path, 
+      class: "inline-flex items-center px-4 py-2 bg-gray-500 text-white text-sm font-medium rounded-lg shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-1" %>
+  <%= form.submit("Save", 
+      class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition") %>
+</div>
+
+<% end %>
