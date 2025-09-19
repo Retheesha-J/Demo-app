@@ -87,3 +87,5 @@ gem "actionmailer", "~> 8.0"
 gem 'pundit'
 
 gem 'devise'
+
+gem "dotenv-rails", groups: [:development, :test]
