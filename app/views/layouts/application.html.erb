@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Demo App" %></title>
+    <title><%= content_for(:title) || "Credenza" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -26,71 +26,120 @@
 
   </head>
 
-  <body data-controller="confirm">
-      <% unless controller_name == "users" && action_name == "login" %>
-      <div class="flex flex-col min-h-screen">
+  <body class="bg-gray-50 text-gray-800" data-controller="confirm">
+    <% unless controller_name == "users" && action_name == "login" %>
+    <div class="flex min-h-screen">
+
+
       <% if user_signed_in? %>
-      <nav class="bg-gray-800 p-4">
-      <div class="flex space-x-6">
-        <%= link_to "Home", dashboard_path, class: "text-gray-300 hover:text-white" %>
-        <%= link_to "Users", users_path, class: "text-gray-300 hover:text-white" %>
-        <% if user_signed_in? %>
-          <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: "text-gray-300 hover:text-white bg-transparent border-0 p-0" %>
-        <% else %>
-          <%= link_to 'Login', new_user_session_path %>
-        <% end %>
+      <aside class="w-64 bg-gray-900 text-gray-200 flex flex-col fixed inset-y-0 z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out"
+             id="sidebar">
+      <div class="flex items-center space-x-3 mt-4">
+        <img src="/icon.png" alt="Logo" class="h-10 w-10 rounded-full">
+        <span class="text-lg font-extrabold bg-gradient-to-r from-indigo-600 to-amber-500 bg-clip-text text-transparent">
+          Credenza
+        </span>
       </div>
-    </nav>
-     <% end %>
+        <nav class="flex flex-col space-y-3 px-6 mt-6">
+          <%= link_to "Home", dashboard_path, class: "hover:bg-gray-700 px-3 py-2 rounded-md transition" %>
+          <%= link_to "Users", users_path, class: "hover:bg-gray-700 px-3 py-2 rounded-md transition" %>
+          <% if user_signed_in? %>
+            <%= button_to 'Logout',
+                          destroy_user_session_path,
+                          method: :delete,
+                          class: "text-left hover:bg-red-600 px-3 py-2 rounded-md transition" %>
+          <% else %>
+            <%= link_to 'Login', new_user_session_path, class: "hover:bg-gray-700 px-3 py-2 rounded-md transition" %>
+          <% end %>
+        </nav>
+      </aside>
+      <% end %>
+
+      <% if user_signed_in? %>
+      <div class="flex-1 flex flex-col md:ml-64">
+
+        <header class="flex items-center justify-between bg-white px-6 py-4 shadow-md sticky top-0 z-30">
+          <button class="md:hidden text-gray-600 hover:text-gray-900" id="menuBtn">
+            ☰
+          </button>
+
+          <div class="flex items-center space-x-3">
+            <img src="/icon.png" alt="Logo" class="h-10 w-10 rounded-full">
+              <span class="text-lg font-extrabold bg-gradient-to-r from-indigo-600 to-amber-500 bg-clip-text text-transparent">
+              Credenza
+            </span>
+          </div>
+      <% end %>
+          <% if user_signed_in? %>
+            <div class="flex items-center space-x-3">
+              <img src="/user.png" alt="User" class="h-10 w-10 rounded-full border">
+            </div>
+          <% end %>
+        </header>
+
+        <main class="flex-1">
+          <%= yield %>
+        </main>
+      </div>
+    </div>
     <% end %>
+
+
     <% if flash[:notice] %>
-      <div class="fixed bottom-5 left-5 z-50 pointer-events-none">
-        <div id="notice" class="bg-white text-black px-6 py-4 rounded-lg shadow-lg pointer-events-auto animate-fade-in-out">
+      <div class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
+        <div id="notice" class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg animate-bounce">
           <%= flash[:notice] %>
         </div>
       </div>
     <% end %>
 
     <% if flash[:alert] %>
-      <div class="fixed bottom-5 left-5 z-50 pointer-events-none">
-        <div id="alert" class="bg-white text-black px-6 py-4 rounded-lg shadow-lg pointer-events-auto animate-fade-in-out">
+      <div class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
+        <div id="alert" class="bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg animate-bounce">
           <%= flash[:alert] %>
         </div>
       </div>
     <% end %>
-                                          
 
 
-<div id="confirmModal" 
-     class="hidden fixed inset-0 flex items-center justify-center bg-gray-800/50 backdrop-blur-sm z-50"
-     data-controller="confirm">
-  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
-    <h2 class="text-lg font-semibold text-gray-800 mb-4">Confirm Delete</h2>
-    <p id="confirmMessage" class="text-gray-600 mb-6">Are you sure?</p>
-    <div class="flex justify-end space-x-3">
-      <button type="button" data-action="click->confirm#close" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Cancel</button>
-      <button type="button" data-action="click->confirm#confirm" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">Delete</button>
+    <div id="confirmModal" class="hidden fixed inset-0 flex items-center justify-center bg-gray-800/50 backdrop-blur-sm z-50"
+         data-controller="confirm">
+      <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-sm">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Confirm Delete</h2>
+        <p id="confirmMessage" class="text-gray-600 mb-6">Are you sure?</p>
+        <div class="flex justify-end space-x-3">
+          <button type="button" data-action="click->confirm#close"
+                  class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition">Cancel</button>
+          <button type="button" data-action="click->confirm#confirm"
+                  class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">Delete</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
 
-
-
-    <%= yield %>
-</div>
     <script>
+
       function hideFlashes(){
         setTimeout(()=>{
           const notice=document.getElementById("notice");
           const alert=document.getElementById("alert");
-
           if(notice) notice.style.display="none";
           if(alert) alert.style.display="none";
         },3000)
       }
       document.addEventListener("DOMContentLoaded", hideFlashes);
       document.addEventListener("turbo:load", hideFlashes);
+
+
+      document.addEventListener("DOMContentLoaded", ()=>{
+        const menuBtn = document.getElementById("menuBtn");
+        const sidebar = document.getElementById("sidebar");
+        if(menuBtn && sidebar){
+          menuBtn.addEventListener("click", ()=>{
+            sidebar.classList.toggle("-translate-x-full");
+          });
+        }
+      });
     </script>
   </body>
 </html>

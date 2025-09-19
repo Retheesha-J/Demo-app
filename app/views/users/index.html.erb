@@ -1,52 +1,109 @@
 <% content_for :title, "Users" %>
 
-<div id="users", class="mt-12 flex justify-center">
-<div class="w-full max-w-4xl px-6">
+<div id="users" class="mt-12 flex justify-center px-4 sm:px-6 lg:px-8">
+  <div class="w-full max-w-6xl">
 
-        <div class="my-4 text-right">
-         <% if current_user && policy(User).send_bulk_emails? %>
-            <%= button_to "Send emails to all users", send_bulk_emails_users_path, method: :post, class: "inline-block bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600" %>
-         <% end %>
-        </div>
+    <!-- Bulk Email Button -->
+    <div class="my-4 text-right">
+      <% if current_user && policy(User).send_bulk_emails? %>
+        <%= button_to send_bulk_emails_users_path,
+            method: :post,
+            class: "inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition" do %>
 
-  <table class="w-full bg-white border border-gray-200 rounded-lg shadow-lg">
-    <thead class="bg-gray-100">
-        <tr>
-            <th class="py-2 px-4 text-left text-gray-700 font-semibold border-b">Name</th>
-            <th class="py-2 px-4 text-left text-gray-700 font-semibold border-b">Email</th>
-            <th class="py-2 px-4 text-gray-700 font-semibold border-b text-center", colspan="4">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% @users.each do |user|%>
-        <tr>
-            <td class="py-2 px-4 border-b"><%= user.name %></td>
-            <td class="py-2 px-4 border-b"><%= user.email %></td>
-            <td class="py-2 px-4 border-b"><%= link_to "Show", user, class: "inline-block bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600" %></td>
-            <% if current_user && policy(user).update? %>
-                <td class="py-2 px-4 border-b"><%= link_to "Edit", edit_user_path(user), class: "inline-block bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600" %></td>
-                <td class="py-2 px-4 border-b">
-                  <button 
-                        data-user-id="<%= user.id %>"
-                        data-user-name="<%= user.name %>"
-                        class="delete-btn bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
-                        Delete
-                    </button>
-                </td>
-            <% end %>
-            <% if current_user && policy(user).send_email? %>
-              <td><%= button_to "Send email", send_email_user_path(user), method: :post, class: "inline-block bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600" %></td>
-            <% end %>
-        </tr>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 0v8a2 2 0 002 2h14a2 2 0 002-2V8m-18 0l9-6 9 6" />
+                    </svg>
         <% end %>
-    </tbody>
+      <% end %>
+    </div>
+    <div class="overflow-x-auto rounded-xl shadow-lg border border-gray-200">
+      <table class="min-w-full divide-y divide-gray-200 text-sm sm:text-base">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="py-3 px-4 text-left font-semibold text-gray-700">Name</th>
+            <th class="py-3 px-4 text-left font-semibold text-gray-700">Email</th>
+            <th colspan="4" class="py-3 px-4 text-center font-semibold text-gray-700">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 bg-white">
+          <% @users.each do |user| %>
+            <tr class="hover:bg-gray-50 transition">
+              <td class="py-3 px-4 font-medium text-gray-800"><%= user.name %></td>
+              <td class="py-3 px-4 text-gray-600"><%= user.email %></td>
 
-</table>
+              <!-- Show -->
+              <td class="py-3 px-4 text-center">
+                <%= link_to user,
+                    class: "inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-500 text-white shadow hover:bg-blue-600 transition" do %>
+                  <!-- Eye icon -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                       viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                <% end %>
+              </td>
+
+              <!-- Edit -->
+              <% if current_user && policy(user).update? %>
+                <td class="py-3 px-4 text-center">
+                  <%= link_to edit_user_path(user),
+                      class: "inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition" do %>
+                    <!-- Pencil icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15.232 5.232l3.536 3.536M9 11l6.586-6.586a2 2 0 112.828 2.828L11.828 13.828A2 2 0 0110.414 14H9v-2z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 20H5a2 2 0 01-2-2V7a2 2 0 012-2h7" />
+                    </svg>
+                  <% end %>
+                </td>
+
+                <!-- Delete -->
+                <td class="py-3 px-4 text-center">
+                  <button
+                    data-user-id="<%= user.id %>"
+                    data-user-name="<%= user.name %>"
+                    class="delete-btn inline-flex items-center justify-center w-10 h-10 rounded-full bg-red-500 text-white shadow hover:bg-red-600 transition">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M10 3h4a1 1 0 011 1v1H9V4a1 1 0 011-1z" />
+                    </svg>
+                  </button>
+                </td>
+              <% end %>
+
+              <!-- Send Email -->
+              <% if current_user && policy(user).send_email? %>
+                <td class="py-3 px-4 text-center">
+                  <%= button_to send_email_user_path(user), method: :post,
+                      class: "inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition" do %>
+                    <!-- Mail icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 0v8a2 2 0 002 2h14a2 2 0 002-2V8m-18 0l9-6 9 6" />
+                    </svg>
+                  <% end %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
-</div>
-<div id="deleteModal" class="hidden fixed inset-0 flex items-center justify-center 
-            bg-black/30 backdrop-blur-sm z-50">
-  <div class="bg-white rounded-lg shadow-lg w-96 p-6">
+
+<div id="deleteModal" class="hidden fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50">
+  <div class="bg-white rounded-lg shadow-xl w-96 p-6 animate-fadeIn">
     <h2 class="text-lg font-semibold text-gray-800 mb-4">Confirm Delete</h2>
     <p id="deleteMessage" class="text-gray-600 mb-6"></p>
 
@@ -64,27 +121,27 @@
     </div>
   </div>
 </div>
+
 <script>
-   document.addEventListener("turbo:load", () => {
-  const modal = document.getElementById("deleteModal");
-  const deleteMessage = document.getElementById("deleteMessage");
-  const deleteForm = document.getElementById("deleteForm");
-  const cancelBtn = document.getElementById("cancelDelete");
+  document.addEventListener("turbo:load", () => {
+    const modal = document.getElementById("deleteModal");
+    const deleteMessage = document.getElementById("deleteMessage");
+    const deleteForm = document.getElementById("deleteForm");
+    const cancelBtn = document.getElementById("cancelDelete");
 
-  document.querySelectorAll(".delete-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const userId = btn.getAttribute("data-user-id");
-      const userName = btn.getAttribute("data-user-name");
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const userId = btn.getAttribute("data-user-id");
+        const userName = btn.getAttribute("data-user-name");
 
-      deleteMessage.textContent = `Are you sure you want to delete ${userName}?`;
-      deleteForm.action = `/users/${userId}`;
-      modal.classList.remove("hidden");
+        deleteMessage.textContent = `Are you sure you want to delete ${userName}?`;
+        deleteForm.action = `/users/${userId}`;
+        modal.classList.remove("hidden");
+      });
+    });
+
+    cancelBtn.addEventListener("click", () => {
+      modal.classList.add("hidden");
     });
   });
-
-  cancelBtn.addEventListener("click", () => {
-    modal.classList.add("hidden");
-  });
-});
-                         
 </script>

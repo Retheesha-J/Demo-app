@@ -16,18 +16,6 @@ class User < ApplicationRecord
 
     before_validation :set_default_role, on: :create
 
-    def admin?
-        role == "admin"
-    end
-
-    def support?
-        role == "support"
-    end
-
-    def user?
-        role == "user"
-    end
-
     private
     def set_default_role
         self.role ||= "user"

@@ -80,7 +80,7 @@ class UsersController < ApplicationController
   
   def send_bulk_emails
     authorize User
-    users=User.where(role: "user")
+    users = User.all
     users.find_each do |user|
       UserMailer.welcome_email(user).deliver_later
     end
@@ -97,5 +97,6 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation, :role)
     end
+
 
 end

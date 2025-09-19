@@ -1,22 +1,22 @@
 class UserPolicy < ApplicationPolicy
   def create?
-    user.admin?
+    user.role == "admin"
   end
 
   def update?
-    user.admin?
+    user.role == "admin"
   end
 
   def destroy?
-    user.admin?
+    user.role == "admin"
   end
 
   def send_email?
-    user.admin? || user.support?
+    user.role.in?(%w[admin support])
   end
 
   def send_bulk_emails?
-    user.admin? || user.support?
+    user.role.in?(%w[admin support])
   end
 
   def index?
@@ -28,7 +28,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   class Scope < ApplicationPolicy::Scope
-    def  resolve 
+    def resolve
       scope.all
     end
   end

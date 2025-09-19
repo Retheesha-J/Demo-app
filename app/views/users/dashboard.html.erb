@@ -1,21 +1,45 @@
-
-<div class="min-h-screen bg-gray-50 flex items-center justify-center">
-  <div class="max-w-2xl w-full bg-white rounded-2xl shadow-lg p-8 text-center">
+<div class="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+  <div class="max-w-2xl w-full bg-white rounded-3xl shadow-2xl p-10 text-center border border-gray-200">
     
-    <h1 class="text-3xl font-bold text-gray-800 mb-4">
-      Welcome to User Management App
+
+    <h1 class="text-4xl font-extrabold mb-4 
+               bg-gradient-to-r from-indigo-600 to-amber-500 bg-clip-text text-transparent">
+      Welcome to Credenza
     </h1>
     
-    <p class="text-gray-600 mb-6">
-      Manage users easily with create, read, update, and delete functionality.
+
+    <p class="text-gray-600 mb-8 text-lg">
+      Manage users seamlessly with <span class="font-semibold text-gray-800">create</span>, 
+      <span class="font-semibold text-gray-800">read</span>, 
+      <span class="font-semibold text-gray-800">update</span>, 
+      and <span class="font-semibold text-gray-800">delete</span> features.
     </p>
-    
-    <div class="flex justify-center space-x-4">
-      <%= link_to "View Users", users_path, 
-          class: "px-6 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700" %>
-      <% if current_user&.role=="admin" %>
-        <%= link_to "Add New User", new_user_path, 
-          class: "px-6 py-2 bg-green-600 text-white font-medium rounded-lg shadow hover:bg-green-700" %>
+
+    <div class="flex flex-col sm:flex-row justify-center gap-4">
+      <%= link_to users_path,
+          class: "flex items-center justify-center px-6 py-3 rounded-xl 
+                  bg-gradient-to-r from-indigo-600 to-amber-500 text-white font-medium 
+                  shadow-lg hover:scale-105 transform transition duration-300" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        View Users
+      <% end %>
+
+      <% if current_user&.role == "admin" %>
+        <%= link_to new_user_path,
+            class: "flex items-center justify-center px-6 py-3 rounded-xl 
+                    bg-gradient-to-r from-amber-500 to-indigo-600 text-white font-medium 
+                    shadow-lg hover:scale-105 transform transition duration-300" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" 
+               class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M12 4v16m8-8H4" />
+          </svg>
+          Add New User
+        <% end %>
       <% end %>
     </div>
     
