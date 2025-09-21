@@ -2,16 +2,15 @@
   <div id="<%= dom_id user %>" 
        class="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-indigo-100 p-10 overflow-hidden">
 
-    <!-- Decorative Glow Circles -->
+
     <div class="absolute -top-12 -left-12 w-40 h-40 bg-indigo-400 rounded-full opacity-20 blur-3xl"></div>
     <div class="absolute -bottom-12 -right-12 w-40 h-40 bg-amber-400 rounded-full opacity-20 blur-3xl"></div>
 
-    <!-- Header -->
+
     <h2 class="text-3xl font-extrabold text-center bg-gradient-to-r from-indigo-600 to-amber-500 bg-clip-text text-transparent mb-8">
       User Profile
     </h2>
 
-    <!-- User Info -->
     <div class="space-y-6 text-center">
       <div>
         <p class="text-sm uppercase text-gray-500">Name</p>
@@ -29,7 +28,6 @@
       </div>
     </div>
 
-    <!-- Back Button -->
     <div class="mt-10 flex justify-center">
       <%= link_to users_path,
           class: "inline-flex items-center space-x-2 bg-gradient-to-r from-indigo-500 to-amber-500 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transform transition-all duration-300" do %>
