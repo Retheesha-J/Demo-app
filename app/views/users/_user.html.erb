@@ -26,6 +26,11 @@
         <p class="text-sm uppercase text-gray-500">Password</p>
         <p class="text-lg font-semibold text-gray-800">••••••••</p>
       </div>
+        <div>
+      <div id="reset-password-link" class="hidden mt-4">
+        <%= link_to "Reset Password", edit_user_registration_path,
+                    class: "text-blue-600 hover:underline" %>
+      </div>
     </div>
 
     <div class="mt-10 flex justify-center">

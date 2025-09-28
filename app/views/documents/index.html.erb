@@ -1,0 +1,18 @@
+<div class="flex justify-center items-start min-h-screen bg-gray-50 py-10">
+  <div class="w-full max-w-2xl bg-white shadow-lg rounded-xl p-6">
+    <h1 class="text-2xl font-bold mb-6 text-center">My Documents</h1>
+
+    <div class="mb-6 text-center">
+      <%= link_to "Upload New", new_document_path, class: "bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 transition font-medium" %>
+    </div>
+
+    <div class="space-y-4">
+      <% @documents.each do |doc| %>
+        <div class="flex items-center justify-between bg-gray-50 shadow rounded-lg p-4 hover:bg-gray-100 transition">
+          <span class="font-medium text-gray-800"><%= doc.title %></span>
+          <%= link_to "Download", download_document_path(doc), class: "bg-green-600 text-white px-3 py-1 rounded-lg shadow hover:bg-green-700 transition text-sm font-medium" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

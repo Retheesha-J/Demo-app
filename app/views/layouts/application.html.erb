@@ -19,6 +19,8 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pO+3wTgH8n+MG2eybIhXQk60p4Qw0lL57GxZxFQGr+XjUL7nQpGpt7+eFz6OX7jTcdwFhCr9Pq0F69Uq6Bq2w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
@@ -43,14 +45,7 @@
         <nav class="flex flex-col space-y-3 px-6 mt-6">
           <%= link_to "Home", dashboard_path, class: "hover:bg-gray-700 px-3 py-2 rounded-md transition" %>
           <%= link_to "Users", users_path, class: "hover:bg-gray-700 px-3 py-2 rounded-md transition" %>
-          <% if user_signed_in? %>
-            <%= button_to 'Logout',
-                          destroy_user_session_path,
-                          method: :delete,
-                          class: "text-left hover:bg-red-600 px-3 py-2 rounded-md transition" %>
-          <% else %>
-            <%= link_to 'Login', new_user_session_path, class: "hover:bg-gray-700 px-3 py-2 rounded-md transition" %>
-          <% end %>
+          <%= link_to "Documents", documents_path, class: "hover:bg-gray-700 px-3 py-2 rounded-md transition" %>
         </nav>
       </aside>
       <% end %>
@@ -70,11 +65,33 @@
             </span>
           </div>
       <% end %>
-          <% if user_signed_in? %>
-            <div class="flex items-center space-x-3">
-              <img src="/user.png" alt="User" class="h-10 w-10 rounded-full border">
+      <% if user_signed_in? %>
+        <div class="relative" id="profileMenu">
+
+          <button id="profileBtn" class="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A4.992 4.992 0 0112 15a4.992 4.992 0 016.879 2.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+
+          <div id="profileDropdown"
+              class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
+            <div class="px-4 py-2 text-sm text-gray-700 border-b">
+              <strong><%= current_user.email %></strong>
+              <p class="text-xs text-gray-500"><%= current_user.role %></p>
             </div>
-          <% end %>
+            <%= link_to "Profile", user_path(current_user),
+                  class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+              <%= link_to "Reset Password", edit_user_registration_path,
+              class: "block px-4 py-2 text-sm text-blue-600 hover:bg-blue-50" %>
+            <%= button_to "Logout",
+                  destroy_user_session_path,
+                  method: :delete,
+                  class: "w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50" %>
+          </div>
+        </div>
+      <% end %>
+
         </header>
 
         <main class="flex-1">
@@ -135,11 +152,35 @@
         const menuBtn = document.getElementById("menuBtn");
         const sidebar = document.getElementById("sidebar");
         if(menuBtn && sidebar){
-          menuBtn.addEventListener("click", ()=>{
-            sidebar.classList.toggle("-translate-x-full");
-          });
-        }
-      });
+            menuBtn.addEventListener("click", ()=>{
+              sidebar.classList.toggle("-translate-x-full");
+            });
+          }
+        });
+        function initProfileDropdown() {
+        const profileBtn = document.getElementById("profileBtn");
+        const profileDropdown = document.getElementById("profileDropdown");
+
+        if (!profileBtn || !profileDropdown) return;
+
+        profileBtn.replaceWith(profileBtn.cloneNode(true));
+        const newBtn = document.getElementById("profileBtn");
+
+        newBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          profileDropdown.classList.toggle("hidden");
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!newBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+            profileDropdown.classList.add("hidden");
+          }
+        });
+      }
+      document.addEventListener("DOMContentLoaded", initProfileDropdown);
+
+      document.addEventListener("turbo:load", initProfileDropdown);
+
     </script>
   </body>
 </html>

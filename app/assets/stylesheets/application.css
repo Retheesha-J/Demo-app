@@ -8,3 +8,22 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+/* Base style for all page links */
+.page {
+  @apply px-3 py-1 rounded-md border border-gray-300 text-gray-700 text-sm hover:bg-gray-100;
+}
+
+/* Active page (current page) */
+.page.active {
+  @apply bg-blue-600 text-white border-blue-600;
+}
+
+/* Disabled buttons (Prev/Next when unavailable) */
+.page.disabled {
+  @apply opacity-50 cursor-not-allowed text-gray-400;
+}
+
+/* Prev/Next links */
+.page.prev, .page.next {
+  @apply font-medium;
+}

@@ -3,9 +3,48 @@ class UsersController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create]
   before_action :authenticate_user!
   # GET /users or /users.json
-  def index
-    @users = policy_scope(User)
+def index
+ base_scope = policy_scope(User)
+
+  # Step 2: build ransack query on top of that
+  @q = base_scope.ransack(params[:q])
+
+  # Step 3: apply filtering + sorting
+  result = @q.result(distinct: true)  
+
+  # filtering
+  # users = users.where("name ILIKE ?", "%#{params[:name]}%") if params[:name].present?
+  # users = users.where(role: params[:role]) if params[:role].present?
+
+  # sorting
+  # if params[:sort].present?
+  #   sort_column, sort_direction = params[:sort].split(":")
+  #   sort_direction = %w[asc desc].include?(sort_direction) ? sort_direction : "asc"
+  #   users = users.order("#{sort_column} #{sort_direction}")
+  # else
+  #   users = users.order(created_at: :desc)
+  # end
+
+  # pagination 
+  @pagy, @users = pagy(result, items: (params[:per_page].presence || 5).to_i)
+
+
+  respond_to do |format|
+    format.html
+    format.json do
+      render json: {
+        data: @users,
+        meta: {
+          page: @pagy.page,
+          per_page: @pagy.vars[:items],
+          total_pages: @pagy.pages,
+          total_count: @pagy.count
+        }
+      }
+    end
   end
+end
+
 
   # GET /users/1 or /users/1.json
   def show
@@ -81,11 +120,25 @@ class UsersController < ApplicationController
   def send_bulk_emails
     authorize User
     users = User.all
+    Rails.logger.info "Users to email: #{users.pluck(:email).join(', ')}"  # debug
     users.find_each do |user|
       UserMailer.welcome_email(user).deliver_later
     end
-    redirect_to users_path,notice:"#{users.count} emails have been queued"
+    redirect_to users_path, notice: "#{users.count} emails have been queued"
   end
+
+    def upload_document
+        @user = User.find(params[:id])
+        if params[:documents]
+          params[:documents].each do |doc|
+            @user.documents.attach(doc)
+          end
+          redirect_to users_path, notice: "Document(s) uploaded!"
+        else
+          redirect_to users_path, alert: "Please select a file."
+        end
+      end
+  
 
   private
     # Use callbacks to share common setup or constraints between actions.

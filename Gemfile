@@ -67,7 +67,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
-
+# Web server 
 gem 'webrick'
 
 # For background jobs
@@ -75,17 +75,34 @@ gem 'sidekiq'
 
 # For Redis (Sidekiq requires Redis)
 gem 'redis'
+# For file uploads (ships with Rails)
 gem "activestorage"
 
 # Optional: for better Rails integration
 gem 'sinatra', require: nil
 
+# For integrating with SendGrid email service
 gem 'sendgrid-ruby'
 
+# Rails’ built-in mailer framework
 gem "actionmailer", "~> 8.0"
 
-gem 'pundit'
+# Authorization policies
+gem 'pundit' 
 
+# Authentication
 gem 'devise'
 
 gem "dotenv-rails", groups: [:development, :test]
+# Pagination
+
+gem "pagy", "~> 7.0"
+
+gem 'ransack'
+
+group :test do
+  gem 'rails-controller-testing'
+end
+
+
+gem 'activestorage-validator'
