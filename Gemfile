@@ -82,7 +82,7 @@ gem 'sinatra', require: nil
 
 gem 'sendgrid-ruby'
 
-gem "actionmailer", "~> 8.0"
+gem "actionmailer", "~> 8.1"
 
 gem 'pundit'
 
